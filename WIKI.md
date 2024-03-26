@@ -2,7 +2,7 @@
 
 ## Build Provenances
 
-### Gathering build info from the binary
+### Build info from compiled binaries
 
 > `file geth`
 
@@ -72,6 +72,36 @@ _Interesting parts:_
   - CGO_ENABLED
   - GOARCH
   - GOOS
+
+### Environment
+
+> `go env`
+
+Env prints Go environment information. Use `-json` flag for json format.
+
+```sh
+$ go env
+GO111MODULE='auto'
+GOARCH='amd64'
+GOCACHE='/home/travis/.cache/go-build'
+GOENV='/home/travis/.config/go/env'
+...
+GOHOSTARCH='amd64'
+GOHOSTOS='linux'
+GOINSECURE=''
+GOMODCACHE='/home/travis/gopath/pkg/mod'
+...
+GOOS='linux'
+GOPATH='/home/travis/gopath'
+GOPRIVATE=''
+GOPROXY='https://proxy.golang.org,direct'
+GOROOT='/home/travis/.gimme/versions/go1.21.8.linux.amd64'
+...
+GOTOOLCHAIN='auto'
+GOTOOLDIR='/home/travis/.gimme/versions/go1.21.8.linux.amd64/pkg/tool/linux_amd64'
+...
+GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -fdebug-prefix-map=/tmp/go-build1824594803=/tmp/go-build -gno-record-gcc-switches'
+```
 
 ### Build Provenance tooling
 
