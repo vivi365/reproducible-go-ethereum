@@ -8,7 +8,7 @@ fi
 open -a Docker
 sleep 2
 
-# vaiables
+# variables
 TARGET=$1
 DIR=$2
 DOCKER_PATH=~/reproducible-go-ethereum/docker/$DIR
@@ -45,10 +45,7 @@ echo "\nFirst build has hash $md5_reference\nSecond build has hash $md5_local"
 if [ "$md5_local" != "$md5_reference" ]; then
     echo "\nBinaries mismatch. Running diffoscope..."
     cd "$OUTPUT_DIR" || exit 1
-    docker run --rm -t -w "$(pwd)" -v "$(pwd)":"$(pwd)":ro registry.salsa.debian.org/reproducible-builds/diffoscope --progress --html $DIFF_DIR/diff.html geth-1 geth-2
+    docker run --rm -t -w "$(pwd)" -v "$(pwd)":"$(pwd)":rw registry.salsa.debian.org/reproducible-builds/diffoscope --progress geth-1 geth-2
 else
     echo "Binaries match."
 fi
-
-
-# todo write diff to file.
