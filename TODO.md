@@ -1,8 +1,8 @@
 ## TODO
 
 - [x] -dlgo as build flag in docker! (did not improve)
-- [ ] Replicate travis env and diff.
-- [ ] `-dlgo` flag
+- [ ] Replicate travis env and diff. (not sure how to get the same commit from a new Travis pipeline...)
+- [x] `-dlgo` flag
 
 
 ## Ideas
