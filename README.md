@@ -1,13 +1,14 @@
 # reproducing geth
 
 ## Goal
-builds that can be reproduced 
+
+builds that can be reproduced
+
 - [x] Locally
 - [ ] By users - issues include embedding paths from CI env
 
-for...
+For...
+
 - Binary bundles (linux)
 - Docker images
 - ...
-
-
