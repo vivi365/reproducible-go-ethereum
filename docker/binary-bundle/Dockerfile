@@ -15,6 +15,6 @@ RUN wget https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.13.14
 
 # checkout and build in same env as ref build (except travis)
 RUN cd go-ethereum && git checkout 2bd6bd01d2e8561dd7fc21b631f4a34ac16627a1 && \
-	CGO_ENABLED=1 /usr/local/go/bin/go run ./build/ci.go install ./cmd/geth/
+	CGO_ENABLED=1 /usr/local/go/bin/go run ./build/ci.go install -dlgo ./cmd/geth/
 RUN cd go-ethereum/build/bin && strip geth --remove-section .note.go.buildid --remove-section .note.gnu.build-id geth
 RUN	mv go-ethereum/build/bin/geth /bin/geth-2
