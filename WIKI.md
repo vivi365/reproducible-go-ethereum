@@ -187,7 +187,7 @@ Kernel steps:
 3. Load contents specified as `LOAD` in the program header and check if interpreter is needed
 4. Control to executable/interpreter
 
-The `-l` flag displays the program header header
+The `-l` flag displays the program header
 
 > `readelf -l geth`
 
