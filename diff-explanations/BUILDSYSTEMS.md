@@ -1,6 +1,6 @@
 # Build Systems - Go Ethereum
 
-> The purpose of this document is to map out the build environments used in geth releases and reproducing attempts, in order to 1. find causes of unreproducibility 2. find any integrity issues ni build pipeline.
+> The purpose of this document is to map out the build environments used in geth releases and reproducing attempts, in order to **1.** find causes of unreproducibility, **2.** find any integrity issues ni build pipeline.
 
 Build environments discussed:
 
@@ -85,7 +85,7 @@ e235ac942f5019f545285756b41fbc3e /home/travis/.gimme/versions/go1.21.6.linux.amd
 
 **Note:** Checksums match for gimme on initial attempts, which is good.
 
-### B2: Docker
+## B2: Docker
 
 The environment for the bundle build is replicated in Docker in terms of
 
@@ -98,4 +98,3 @@ No Travis pipeline is set up, as users must be able to verify a build without th
 - Go toolchain:
 - Linker:
 - C toolchain:
--

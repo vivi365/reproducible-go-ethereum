@@ -1,4 +1,4 @@
-# what the diff...
+# Root causes for diffs
 
 ## diff 1 - LOAD in program header
 
@@ -23,10 +23,24 @@ LOAD             0x0000000000000000 0x0000000000400000 0x0000000000400000
 ```
 
 ## diff 2 - GNU_EH_FRAME in program header
+
 LOAD segment in the program header of an ELF file, it likely indicates differences in how the executables were compiled or linked.
 At the moment we have a very large diff... Some causes identified are differing sizes for loaded programs, offsetting address loaded. Another reason is path embeddings from travis.
+
+```txt
+Type            Offset      VirtAddr            PhysAddr            FileSiz     MemSiz     Flg  Align
+
+GNU_EH_FRAME    0x25820c0   0x00000000029820c0  0x00000000029820c0  0x003afc    0x003afc    R     0x4
+
+vs
+
+GNU_EH_FRAME    0x2582080   0x0000000002982080  0x0000000002982080  0x003afc    0x003afc    R   0x4
+```
 
 **Insights:**
 
 - ELF headers match
+
+```
+
 ```
