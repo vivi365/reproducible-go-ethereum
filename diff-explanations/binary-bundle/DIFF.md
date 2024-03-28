@@ -1,6 +1,6 @@
 # Root causes for diffs
 
-## diff 1 - LOAD in program header
+## #1 - LOAD in program header
 
 Two loaded segments have different sizes, changing the addresses they are loaded at.
 
@@ -22,7 +22,7 @@ LOAD             0x0000000000000000 0x0000000000400000 0x0000000000400000
                 0x000000000259bc50 0x000000000259bc50  R E    0x200000
 ```
 
-## diff 2 - GNU_EH_FRAME in program header
+## #2 GNU_EH_FRAME in program header
 
 LOAD segment in the program header of an ELF file, it likely indicates differences in how the executables were compiled or linked.
 At the moment we have a very large diff... Some causes identified are differing sizes for loaded programs, offsetting address loaded. Another reason is path embeddings from travis.
@@ -44,3 +44,21 @@ GNU_EH_FRAME    0x2582080   0x0000000002982080  0x0000000002982080  0x003afc    
 ```
 
 ```
+
+
+## #3 Date
+
+20240227 embedded in travis release
+
+
+
+```txt
+20240227	
+··0x01e73830·32303234·30323237·00000000·00000000·20240227........	
+```
+
+
+## #4 Embedding path files
+
+
+Extra: `karalabe/usb` embedded, although does not appear as direct nor indirect dependency.
