@@ -1,6 +1,6 @@
 # Build Systems - Go Ethereum
 
-> The purpose of this document is to map out the build environments used in geth releases and reproducing attempts, in order to **1.** find causes of unreproducibility, **2.** find any integrity issues ni build pipeline.
+> The purpose of this document is to map out the build environments used in geth releases and reproducing attempts, in order to **1.** find causes of unreproducibility, **2.** find any integrity issues in build pipeline.
 
 Build environments discussed:
 
@@ -15,7 +15,12 @@ We `wget` the release and untar it in a Docker image (see `docker/binary-bundle/
 
 ### Go toolchain
 
-The go toolchain specified in checksums will be the one used if `-dlgo` is provided, else an existing Go version is used (version downloaded by `gimme` in Travis).
+The `-dlgo` flag is used for CI builds (see `go-ethereum/travis.yml`) which results in the following behaviour:
+
+- Gimme, a script for downloading Go in Travis, will download the Go version specified in `go-ethereum/travis.yml`
+- Go version corresponds to the version specified in `go-ethereum/build/checksums.txt`?
+  - **Yes:** use gimme download of Go. This is not verified AFAIK.
+  - **No:** Download Go and verify correct package contents according to checksum, use this Go compiler
 
 ```go
 // dlgo flag in doInstall [build/ci.go]
@@ -48,42 +53,12 @@ func DownloadGo(csdb *ChecksumDB) string {
 		log.Fatal(err)
 	}
   // ....
-  // extracts archive. NOTE: why not verify the binary checksum? Is it enough with the filetree of archive?
+  // extracts archive. NOTE (VIVI): why not verify the binary checksum? Is it enough with the filetree of archive?
   if err := ExtractArchive(dst, godir); err != nil {
 		log.Fatal(err)
 	}
   // ...
 ```
-
-## verification of go toolchain
-
-A verification for downloaded packages is done, for example, if using -dlgo, it would verify the filetree checksum.
-
-There are two caveats:
-
-1. If the compile flag `-dlgo` is used, Go will be downloaded for building, and a verification of the archive is done. However, if current Go version in environment satisfies the specified one in `build/checksums.txt`, e.g. `1.21.6`, then no download of Go is done.
-
-```go
-// line  96 in [internal/build/gotool.go]
-log.Printf("-dlgo version matches active Go version %s, skipping download.", activeGo)
-// verification is done in downloadGo (see above)
-```
-
-In this case, the gimme version of Go is used, located in `/home/travis/.gimme/versions/go1.21.6.linux.amd64`. This is not verified AFAIK.
-
-**Suggestion:** Should also verify here.
-
-2. No verification of binaries unarchived seems to be done
-
-**Suggestion:** Verify Go checksum of binaries, eg:
-
-```sh
-md5sum $(which go)
-e235ac942f5019f545285756b41fbc3e /home/travis/.gimme/versions/go1.21.6.linux.amd64/bin/go
-# check go download posted hash
-```
-
-**Note:** Checksums match for gimme on initial attempts, which is good.
 
 ## B2: Docker
 
@@ -98,3 +73,16 @@ No Travis pipeline is set up, as users must be able to verify a build without th
 - Go toolchain:
 - Linker:
 - C toolchain:
+
+# Suggestions!
+
+1. Should verify gimme toolchain if used!
+2. Verification of unarchived Go binaries seems to be done
+
+```sh
+md5sum $(which go)
+e235ac942f5019f545285756b41fbc3e /home/travis/.gimme/versions/go1.21.6.linux.amd64/bin/go
+# check go download posted hash
+```
+
+**Note:** Checksums match for gimme on initial attempts, which is good. But (potentially small) risk in compromise of gimme script. **TTBV** = Trust Travis But Verify

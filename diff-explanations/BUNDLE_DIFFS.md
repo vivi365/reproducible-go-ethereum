@@ -51,7 +51,6 @@ GNU_EH_FRAME    0x2582080   0x0000000002982080  0x0000000002982080  0x003afc    
 20240227 embedded in travis release
 
 
-
 ```txt
 20240227	
 ··0x01e73830·32303234·30323237·00000000·00000000·20240227........	
@@ -59,6 +58,4 @@ GNU_EH_FRAME    0x2582080   0x0000000002982080  0x0000000002982080  0x003afc    
 
 
 ## #4 Embedding path files
-
-
-Extra: `karalabe/usb` embedded, although does not appear as direct nor indirect dependency.
+- `karalabe/usb` embedded in one version... etc.
