@@ -17,7 +17,8 @@ For...
 
 What is currently reproducible?
 
-- **Local builds**, i.e. we can compile twice in Docker and get the same result
+- **Local builds**, i.e. we can compile twice in Docker and get the same md5
+- **Local Travis builds**, i.e. we can compile twice in travis and get the same md5
 
 What is not reproducible?
 
