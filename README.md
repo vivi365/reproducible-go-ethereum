@@ -1,14 +1,24 @@
-# reproducing geth
+# Reproducible Go Ethereum
 
-## Goal
+## Goals
 
-builds that can be reproduced
+The goal of reproducible builds in Go Ethereum is to make a build reproducible in order to...
 
-- [x] Locally
-- [ ] By users - issues include embedding paths from CI env
+1. Enable users to verify the binary artifact they download
+2. Provide a canary to developers, signaling if a build is non-deterministic, possibly
+   related to a security issue
 
 For...
 
 - Binary bundles (linux)
-- Docker images
-- ...
+- Docker images (maybe)
+
+## STATE
+
+What is currently reproducible?
+
+- **Local builds**, i.e. we can compile twice in Docker and get the same result
+
+What is not reproducible?
+
+- We cannot reproduce a **CI build** for a binary release (Linux x86-64) (see root cause analysis in DIFF.md)
