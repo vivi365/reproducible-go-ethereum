@@ -14,7 +14,7 @@ DIR=$2
 DOCKER_PATH=~/reproducible-go-ethereum/docker/$DIR
 OUTPUT_DIR=~/reproducible-go-ethereum/bin
 DIFF_DIR=~/reproducible-go-ethereum/diff-explanations
-rm ~/reproducible-go-ethereum/bin/geth-1 && rm ~/reproducible-go-ethereum/bin/geth-2
+#rm ~/reproducible-go-ethereum/bin/geth-1 && rm ~/reproducible-go-ethereum/bin/geth-2
 mkdir -p $OUTPUT_DIR $DIFF_DIR 
 
 

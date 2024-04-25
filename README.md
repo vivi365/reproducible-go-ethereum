@@ -1,5 +1,12 @@
 # Reproducible Go Ethereum
 
+## HOW TO
+
+Build dockerfile and diffoscope if different binaries are produced.
+`./scripts/docker-and-diff.sh <docker dir> <imgname>` e.g. `./scripts/docker-and-diff.sh v.1.13.14 geth-april-20`
+
+May need to redo `chmod +x ./scripts/docker-and-diff.sh` if docker issues.
+
 ## Goals
 
 The goal of reproducible builds in Go Ethereum is to make a build reproducible in order to...

@@ -1,4 +1,4 @@
-# Root Cause Analysis for Binary Diffs
+# Root Cause Analysis for Binary Unreproducibility
 
 > These are for official Linux amd64 binary bundles from [geth.ethereum.org/downloads](https://geth.ethereum.org/downloads).
 
@@ -8,18 +8,19 @@
 ## TODO
 
 - [x] Check equivalence of Go
-- [ ] Check equivalence of c compiler
+- [x] Check equivalence of c compiler
+- [x] Check equivalence of linker
 - [ ] Check equivalence of compiler flags
 - [ ] Check equivalence of dependencies and versions
-
+- [ ] Check if different optimizations are applied
 
 ## What do we do to the binaries?
 
 - Strip symbol table
 - Strip two build id sections
-  - This enables local reproducibility (compile twice pipeline ok)
+  - This makes local builds reproducibile (compile twice pipeline ok)
 
-See `Dockerfiles` in `/docker` for details.
+See `Dockerfile`s in `/docker` for details.
 
 ## What is Good?
 
@@ -27,10 +28,11 @@ See `Dockerfiles` in `/docker` for details.
   - This is mainly metadata
 - The go compilers are the same
   - I checked `md5` of the Travis go SDK (downloaded by `gimme`) - it corresponds to the `md5` used in reproducing `Dockerfile`
+- Same versions of gcc and ld (probably? in my pipeline at least. May need to double check w. `readelf -p geth-bundle`)
 
-## What is bad? (THE DIFFS!)
+## What is diffing?
 
-The diffs are great, as in very large. Se excerpt in `/reports/binary-bundle-diff.html`
+The diffs are great, as in very large. See small excerpt in `/reports/binary-bundle-diff.html`
 
 ### LOAD in program header
 
@@ -54,14 +56,22 @@ LOAD             0x0000000000000000 0x0000000000400000 0x0000000000400000
                 0x000000000259bc50 0x000000000259bc50  R E    0x200000
 ```
 
-- **ROOTCAUSE:** Unknown
-- **HOW TO FIND ROOTCAUSE:** Possibly due to how dependencies are loaded. Check equivalence of toolchains and dependencies.
+- **ROOTCAUSE:** Instructions differ for some functions. `BLS12` from `gnarkcrypto` is in focus.
+- **HOW TO FIND ROOTCAUSE:** Inspect diffoscopes and disassembled objdumps (x86).
+
+Note:
+
+- Try `-ldflags=" -dumpdep"` for dependency graph of symbols
+
+#### BLS12
 
 
-## #2 GNU_EH_FRAME in program header
 
-LOAD segment in the program header of an ELF file, it likely indicates differences in how the executables were compiled or linked.
-At the moment we have a very large diff... Some causes identified are differing sizes for loaded programs, offsetting address loaded. Another reason is path embeddings from travis.
+
+
+### #2 GNU_EH_FRAME in program header
+
+This is exception handling.
 
 ```txt
 Type            Offset      VirtAddr            PhysAddr            FileSiz     MemSiz     Flg  Align
@@ -73,8 +83,10 @@ vs
 GNU_EH_FRAME    0x2582080   0x0000000002982080  0x0000000002982080  0x003afc    0x003afc    R   0x4
 ```
 
+- **ROOTCAUSE:** Unknown
+- **HOW TO FIND ROOTCAUSE:** See if solved with `BLS12`, else investigate further.
 
-## #3 Date
+### #3 Date
 
 20240227 embedded in travis release
 
@@ -83,12 +95,10 @@ GNU_EH_FRAME    0x2582080   0x0000000002982080  0x0000000002982080  0x003afc    
 ··0x01e73830·32303234·30323237·00000000·00000000·20240227........
 ```
 
-- **ROOTCAUSE:** Unknown
-- **HOW TO FIX:** read literature, probably mentions how to remove it
+- **ROOTCAUSE:** Unknown, something that Travis does? or a passed `ldflag?`
+- **HOW TO FIX:** Check more precisely which section this appears in.
 
-
-
-## #4 Embedding path files
+### #4 Embedding path files
 
 **Q:** why is --trimpath not always applied? See diffs below
 
@@ -103,3 +113,5 @@ GNU_EH_FRAME    0x2582080   0x0000000002982080  0x0000000002982080  0x003afc    
 │ -/home/travis/gopath/pkg/mod/github.com/ethereum/c-kzg-4844@v0.4.0/bindings/go/../../src/c_kzg_4844.c
 ```
 
+- **ROOTCAUSE:** Unknown
+- **HOW TO FIX:** Bug report Go.

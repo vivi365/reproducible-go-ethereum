@@ -2,16 +2,32 @@
 
 ## objdump
 
-> `objdump -d geth` disassembles executable parts into assembly
+> `objdump` is an LLVM object file dumper
 
-> `objdump -D geth` disassemble all
+- Useful flags
+  - `-d` disassembles executable parts into assembly
+  - `-D` disassemble all
+  - `-x` all headers
+  - `--reloc` Display the relocation entries in the file
+  - etc.. see manual
 
 ```sh
 # example of diffing dumps
 objdump -d geth-1 > g1.txt
 objdump -d geth-2 > g2.txt
 
-diff g1.txt g2.txt
+diff -u g1.txt g2.txt
+```
+
+## nm
+
+> `nm` is an LLVM symbol table dumper
+
+After stripping:
+
+```sh
+nm geth-1
+geth-1: no symbols
 ```
 
 ## Build info from object files
@@ -122,3 +138,11 @@ GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -fdebug-
 > `--trimpath`
 
 Trims absolute paths.
+
+> `-ldflags` linker options
+
+List with `gp tool link`
+
+> `-gcflags`
+
+- `-N` disable optimizations
