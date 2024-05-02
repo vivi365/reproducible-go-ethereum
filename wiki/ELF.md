@@ -1,5 +1,7 @@
 # ELF Files
 
+## Anatomy
+
 ELF (Executable and Linkable Format) is a common file format used for executables, object code, shared libraries, and core dumps.
 
 The elf consits of the following parts:
@@ -107,3 +109,25 @@ Program Headers:
    09     .eh_frame_hdr
    10
 ```
+
+### Sections
+
+Section types include (from Linkers & Loaders, John R. Levine, 2000):
+
+- `PROGBITS`
+  - Program contents inclding code, data, debug info
+- `NOBITS`
+   - Block starting symbol (bss) data allocated at load time
+- `SYMTAB` and `DYNTAB`
+  - Symbol tables for regularly linked symbols and symbols needing dynamic linking (loaded at runtime).
+- `STRTAB`
+   - String table
+- `REL`and `RELA`
+  - Relocation information
+- `DYNAMIC` and `HASH`
+  - Dynamic linking information and run-time symbol hash table
+
+Commands
+
+- --sections 
+- `--sections `

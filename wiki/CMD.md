@@ -9,6 +9,7 @@
   - `-D` disassemble all
   - `-x` all headers
   - `--reloc` Display the relocation entries in the file
+  - `--syms` and `--dynamic-syms`
   - etc.. see manual
 
 ```sh
