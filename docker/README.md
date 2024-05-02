@@ -33,6 +33,20 @@ Progress:
 
 This version keeps symbol information which is good for debugging x86.
 
+## `trimpath.Dockerfile`
+
+This reproduces full path embeddings despite uding `trimpath`.
+
+```
+  [9e5270]  /root/go/pkg/mod/github.com/karalabe/hid@v1.0.1-0.20240306101548-573246063e52/libusb/libusb/libusbi.h
+  [9e52d8]  /root/go/pkg/mod/github.com/karalabe/hid@v1.0.1-0.20240306101548-573246063e52/libusb/libusb/os/events_posix.c
+  [9e5348]  /root/go/pkg/mod/github.com/karalabe/hid@v1.0.1-0.20240306101548-573246063e52/libusb/libusb/os/linux_netlink.c
+  [9e53b8]  /root/go/pkg/mod/github.com/karalabe/hid@v1.0.1-0.20240306101548-573246063e52/libusb/libusb/os/linux_usbfs.c
+  [9e5428]  /root/go/pkg/mod/github.com/karalabe/hid@v1.0.1-0.20240306101548-573246063e52/libusb/libusb/core.c
+  [9e54c0]  /root/go/pkg/mod/github.com/karalabe/hid@v1.0.1-0.20240306101548-573246063e52/libusb/libusb/hotplug.c
+  [9e5528]  /root/go/pkg/mod/github.com/karalabe/hid@v1.0.1-0.20240306101548-573246063e52/libusb/libusb/io.c
+```
+
 ## `buildid.Dockerfile`
 
 This Dockerfile is for removing build-ids by build flags rather than stripping -- unfortunately quite unsuccessful.

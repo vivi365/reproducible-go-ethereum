@@ -7,11 +7,7 @@ RUN wget https://go.dev/dl/go1.21.6.linux-amd64.tar.gz && \
 	tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz && \
 	export PATH=$PATH:/usr/local/go/bin
 
-
-RUN cd go-ethereum && git fetch && git checkout c5ba367eb6232e3eddd7d6226bfd374449c63164 && \
+RUN cd go-ethereum && git fetch && git checkout 0d4c38865e9cda492e71221c4c429d9b1bec8ac5 && \
     cd cmd/geth && CGO_ENABLED=1 /usr/local/go/bin/go build -trimpath .
-#RUN cd go-ethereum/build/bin
 
-RUN /usr/local/go/bin/go version >> /go-environment.txt && \
-	echo -e "\n" >> /go-environment.txt && \
-	usr/local/go/bin/go env >> /go-environment.txt
+RUN mv /go-ethereum/cmd/geth/geth /geth && readelf -p .rodata geth | grep /root/go/pkg >> full-paths.txt
