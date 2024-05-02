@@ -11,11 +11,11 @@ RUN wget https://go.dev/dl/go1.21.6.linux-amd64.tar.gz && \
 # build 1
 RUN cd go-ethereum && git checkout 2bd6bd01d2e8561dd7fc21b631f4a34ac16627a1 && \
 	CGO_ENABLED=1 /usr/local/go/bin/go run ./build/ci.go install ./cmd/geth/
-RUN cd go-ethereum/build/bin && strip --remove-section .note.go.buildid --remove-section .note.gnu.build-id geth
-RUN	mv go-ethereum/build/bin/geth /bin/geth-1
+RUN cd go-ethereum/build/bin
+RUN	mv go-ethereum/build/bin/geth /bin/geth-reference
 
 # build 2
 RUN cd go-ethereum && git checkout 2bd6bd01d2e8561dd7fc21b631f4a34ac16627a1 && \
 	CGO_ENABLED=1 /usr/local/go/bin/go run ./build/ci.go install ./cmd/geth/
-RUN cd go-ethereum/build/bin && strip --remove-section .note.go.buildid --remove-section .note.gnu.build-id geth
-RUN	mv go-ethereum/build/bin/geth /bin/geth-2
+RUN cd go-ethereum/build/bin
+RUN	mv go-ethereum/build/bin/geth /bin/geth-reproduce

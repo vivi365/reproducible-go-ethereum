@@ -3,9 +3,11 @@
 ## HOW TO
 
 Build dockerfile and diffoscope if different binaries are produced.
-`./scripts/docker-and-diff.sh <docker dir> <imgname>` e.g. `./scripts/docker-and-diff.sh v.1.13.14 geth-april-20`
 
-May need to redo `chmod +x ./scripts/docker-and-diff.sh` if docker issues.
+> `./scripts/docker-and-diff.sh <docker dir> <imgname>`
+> e.g. `./scripts/docker-and-diff.sh v.1.13.14 geth-april-20`
+
+**Note:** May need to redo `chmod +x ./scripts/docker-and-diff.sh` if docker issues.
 
 ## Goals
 
@@ -29,4 +31,4 @@ What is currently reproducible?
 
 What is not reproducible?
 
-- We cannot reproduce a **CI build** for a binary release (Linux x86-64) (see root cause analysis in DIFF.md)
+- We cannot reproduce a **CI build** for a binary release (Linux x86-64) (see root cause analysis in `wiki/ROOTCAUSES.md`)

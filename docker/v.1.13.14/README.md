@@ -1,1 +1,0 @@
-This `Dockerfile` is for replicating v.1.13.14 binary release for linux amd64. 
