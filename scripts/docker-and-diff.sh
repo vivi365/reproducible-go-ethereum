@@ -1,25 +1,24 @@
 #!/bin/sh
 
 if [ $# -ne 2 ]; then
-    echo "Usage: $0 <target name> <docker relative dir>"
+    echo "Usage: $0 <docker relative dir> <target name> "
     exit 1
 fi
 
 open -a Docker
-sleep 2
+sleep 3
 
-# variables
-TARGET=$1
-DIR=$2
+DIR=$1
+TARGET=$2
 DOCKER_PATH=~/reproducible-go-ethereum/docker/$DIR
 OUTPUT_DIR=~/reproducible-go-ethereum/bin
-DIFF_DIR=~/reproducible-go-ethereum/diff-explanations
-#rm ~/reproducible-go-ethereum/bin/geth-1 && rm ~/reproducible-go-ethereum/bin/geth-2
-mkdir -p $OUTPUT_DIR $DIFF_DIR 
+mkdir -p $OUTPUT_DIR #$DIFF_DIR 
+#DIFF_DIR=~/reproducible-go-ethereum/diff-explanations
+rm $OUTPUT_DIR/geth-reference && rm $OUTPUT_DIR/geth-reproduce
 
 
 # build image
-cd "$DOCKER_PATH" || echo "no such directory $DOCKER_PATH"
+cd "$DOCKER_PATH" || { echo "no such directory $DOCKER_PATH"; exit 1; }
 echo "\nStarting docker build..."
 docker build -t "$TARGET" .
 
@@ -30,22 +29,25 @@ CONTAINER_ID=$(docker run -d "$TARGET" /bin/sh) # cannot use --rm here: loses ci
 
 # copy binaries and stop container
 echo "\nCopying binaries..."
-docker cp -q "$CONTAINER_ID":/bin/geth-1 "$OUTPUT_DIR"/geth-reference
-docker cp -q "$CONTAINER_ID":/bin/geth-2 "$OUTPUT_DIR"/geth-reproduce
+docker cp -q "$CONTAINER_ID":/bin/geth-reference "$OUTPUT_DIR"
+docker cp -q "$CONTAINER_ID":/bin/geth-reproduce "$OUTPUT_DIR"
 docker stop "$CONTAINER_ID"
 docker rm "$CONTAINER_ID"
 
-
-# check binary and diff if neq
+# check binary md5s and diff if neq
 md5_reference=$(md5 "$OUTPUT_DIR"/geth-reference | awk '{print $NF}')
-md5_local=$(md5 "$OUTPUT_DIR"/geth-reproduce | awk '{print $NF}')
+md5_reproduce=$(md5 "$OUTPUT_DIR"/geth-reproduce | awk '{print $NF}')
 
-echo "\nFirst build has hash $md5_reference\nSecond build has hash $md5_local"
+echo "\nFirst build has hash $md5_reference\nSecond build has hash $md5_reproduce"
 
-if [ "$md5_local" != "$md5_reference" ]; then
+if [ "$md5_reproduce" != "$md5_reference" ]; then
     echo "\nBinaries mismatch. Running diffoscope..."
-    cd "$OUTPUT_DIR" || exit 1
+    cd "$OUTPUT_DIR" || { echo "no such directory $OUTPUT_DIR"; exit 1; }
     docker run --rm -t -w "$(pwd)" -v "$(pwd)":"$(pwd)":rw registry.salsa.debian.org/reproducible-builds/diffoscope --progress geth-reference geth-reproduce
 else
-    echo "Binaries match."
+    if [ "$md5_reproduce" == "" ]; then
+        { echo "Error: no binary produced."; exit 1; }
+    else
+        echo "Binaries match."
+    fi
 fi
