@@ -1,10 +1,15 @@
 # Reproducible Go Ethereum
 
+Reproducing Official Linux amd64 binary bundles from [geth.ethereum.org/downloads](https://geth.ethereum.org/downloads)
 
-## Overview
+## Usage
 
-- Tested for v.1.13.14/1.13.15/1.14.0
-- Reproducing Official Linux amd64 binary bundles from [geth.ethereum.org/downloads](https://geth.ethereum.org/downloads)
+Build dockerfile and diffoscope if different binaries are produced.
+
+> `./scripts/docker-and-diff.sh <docker dir> <imgname>`
+> e.g. `./scripts/docker-and-diff.sh v.1.13.14 geth-april-20`
+
+**Note:** May need to redo `chmod +x ./scripts/docker-and-diff.sh` if docker issues.
 
 ## STATE
 
@@ -17,14 +22,14 @@ Rootcauses found:
 - [x] Full path embeddings of C libraries
   - `trimpath` broken on some architectures (e.g. `ubintu:bionic`) See [issue](https://github.com/golang/go/issues/67011)
 
-## Investigation Steps
+### Investigation Steps
 
-- [x] Check equivalence of Go
+- [x] Check equivalence of Go compiler (`-dlgo` follows checksum.txt requirements. gimme download ok.)
 - [x] Check equivalence of c compiler
 - [x] Check equivalence of linker
 - [ ] Check equivalence of compiler flags
 - [ ] Check equivalence of dependencies and versions
-- [ ] Check if different optimizations are applied
+- [x] Check if different optimizations are applied (O2 for all `/ci.go` builds.)
 
 ## Binary Modifications
 
@@ -33,7 +38,7 @@ Rootcauses found:
   - This makes local builds reproducibile (compile twice pipeline ok)
 - Checkout in a new branch (avoid detached state which does not embed a date)
 
-See `Dockerfile`s in `/docker` for details.
+See `Dockerfile`s in `./docker` for details.
 
 ## Positive Findings
 
@@ -42,7 +47,6 @@ See `Dockerfile`s in `/docker` for details.
 - The go compilers are the same
   - I checked `md5` of the Travis go SDK (downloaded by `gimme`) - it corresponds to the `md5` used in reproducing `Dockerfile`
 - Same versions of gcc and ld (probably? in my pipeline at least. May need to double check w. `readelf -p geth-bundle`)
-
 
 ## Goals
 
@@ -56,13 +60,3 @@ For...
 
 - Binary bundles (linux)
 - Docker images (maybe)
-
-
-## How To
-
-Build dockerfile and diffoscope if different binaries are produced.
-
-> `./scripts/docker-and-diff.sh <docker dir> <imgname>`
-> e.g. `./scripts/docker-and-diff.sh v.1.13.14 geth-april-20`
-
-**Note:** May need to redo `chmod +x ./scripts/docker-and-diff.sh` if docker issues.
