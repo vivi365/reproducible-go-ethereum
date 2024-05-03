@@ -1,26 +1,24 @@
 #!/bin/sh
 
 if [ $# -ne 2 ]; then
-    echo "Usage: $0 <docker relative dir> <target name> "
+    echo "Usage: $0 <docker filename> <target name> "
     exit 1
 fi
 
 open -a Docker
 sleep 3
 
-DIR=$1
+FILE=$1
 TARGET=$2
-DOCKER_PATH=~/reproducible-go-ethereum/docker/$DIR
+DOCKER_PATH=~/reproducible-go-ethereum/docker/$FILE
 OUTPUT_DIR=~/reproducible-go-ethereum/bin
-mkdir -p $OUTPUT_DIR #$DIFF_DIR 
-#DIFF_DIR=~/reproducible-go-ethereum/diff-explanations
+mkdir -p $OUTPUT_DIR
 rm $OUTPUT_DIR/geth-reference && rm $OUTPUT_DIR/geth-reproduce
 
 
 # build image
-cd "$DOCKER_PATH" || { echo "no such directory $DOCKER_PATH"; exit 1; }
 echo "\nStarting docker build..."
-docker build -t "$TARGET" .
+docker build -t "$TARGET" - < "$DOCKER_PATH"
 
 
 # start container
