@@ -6,8 +6,9 @@ Reproducing Official Linux amd64 binary bundles from [geth.ethereum.org/download
 
 Build dockerfile and diffoscope if different binaries are produced.
 
-> `./scripts/docker-and-diff.sh <docker dir> <imgname>`
-> e.g. `./scripts/docker-and-diff.sh v.1.13.14 geth-april-20`
+`./scripts/docker-and-diff.sh <docker relative filepath> <docker tag>``
+
+e.g. `./scripts/docker-and-diff.sh travis/CGO0.Dockerfile travis-cgo0`
 
 **Note:** May need to redo `chmod +x ./scripts/docker-and-diff.sh` if docker issues.
 

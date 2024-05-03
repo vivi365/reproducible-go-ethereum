@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ $# -ne 2 ]; then
-    echo "Usage: $0 <docker filename> <target name> "
+    echo "Usage: $0 <docker relative filepath> <docker tag> "
     exit 1
 fi
 
@@ -9,7 +9,7 @@ open -a Docker
 sleep 3
 
 FILE=$1
-TARGET=$2
+TAG=$2
 DOCKER_PATH=~/reproducible-go-ethereum/docker/$FILE
 OUTPUT_DIR=~/reproducible-go-ethereum/bin
 mkdir -p $OUTPUT_DIR
@@ -18,12 +18,12 @@ rm $OUTPUT_DIR/geth-reference && rm $OUTPUT_DIR/geth-reproduce
 
 # build image
 echo "\nStarting docker build..."
-docker build -t "$TARGET" - < "$DOCKER_PATH"
+docker build -t "$TAG" - < "$DOCKER_PATH"
 
 
 # start container
 echo "\nBuild finished. Running container in detached mode."
-CONTAINER_ID=$(docker run -d "$TARGET" /bin/sh) # cannot use --rm here: loses cid
+CONTAINER_ID=$(docker run -d "$TAG" /bin/sh) # cannot use --rm here: loses cid
 
 # copy binaries and stop container
 echo "\nCopying binaries..."
