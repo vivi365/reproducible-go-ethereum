@@ -1,28 +1,20 @@
 # Root Cause Analysis for Binary Unreproducibility
 
-> These are for official Linux amd64 binary bundles from [geth.ethereum.org/downloads](https://geth.ethereum.org/downloads).
+- Tested for v.1.13.14/1.13.15/1.14.0
+- Reproducing Official Linux amd64 binary bundles from [geth.ethereum.org/downloads](https://geth.ethereum.org/downloads)
 
-- Tested for v.1.13.14 and 1.13.15.
-- Unreproducibility issues are consistent.
+## STATE
 
-## TODO
+> ❌ Unreproducible
 
-- [x] Check equivalence of Go
-- [x] Check equivalence of c compiler
-- [x] Check equivalence of linker
-- [ ] Check equivalence of compiler flags
-- [ ] Check equivalence of dependencies and versions
-- [ ] Check if different optimizations are applied
+Rootcauses found:
 
-## What do we do to the binaries?
+- [x] Embedding of date
+  - When compiling in detached state a date is NOT embedded, as in official releases. Check out in a new branch, or perhaps set the date in other way.
+- [x] Full path embeddings of C libraries
+  - `trimpath` broken on some architectures (e.g. `ubintu:bionic`) See [issue](https://github.com/golang/go/issues/67011)
 
-- Strip symbol table
-- Strip two build id sections
-  - This makes local builds reproducibile (compile twice pipeline ok)
-
-See `Dockerfile`s in `/docker` for details.
-
-## What is Good?
+## Positive Findings
 
 - All ELF headers match
   - This is mainly metadata
@@ -30,7 +22,7 @@ See `Dockerfile`s in `/docker` for details.
   - I checked `md5` of the Travis go SDK (downloaded by `gimme`) - it corresponds to the `md5` used in reproducing `Dockerfile`
 - Same versions of gcc and ld (probably? in my pipeline at least. May need to double check w. `readelf -p geth-bundle`)
 
-## What is diffing?
+## Differences
 
 The diffs are great, as in very large. See small excerpt in `/reports/binary-bundle-diff.html`
 
@@ -65,10 +57,6 @@ Note:
 
 #### BLS12
 
-
-
-
-
 ### #2 GNU_EH_FRAME in program header
 
 This is exception handling.
@@ -95,12 +83,12 @@ GNU_EH_FRAME    0x2582080   0x0000000002982080  0x0000000002982080  0x003afc    
 ··0x01e73830·32303234·30323237·00000000·00000000·20240227........
 ```
 
-- **ROOTCAUSE:** Unknown, something that Travis does? or a passed `ldflag?`
-- **HOW TO FIX:** Check more precisely which section this appears in.
+- **ROOTCAUSE:** Detached head state does not embed date (source code)
+- **HOW TO FIX:** Checkout in a new branch from commit
 
 ### #4 Embedding path files
 
-**Q:** why is --trimpath not always applied? See diffs below
+> From v. 1.13.14.
 
 ```sh
 # bundle build
@@ -113,5 +101,5 @@ GNU_EH_FRAME    0x2582080   0x0000000002982080  0x0000000002982080  0x003afc    
 │ -/home/travis/gopath/pkg/mod/github.com/ethereum/c-kzg-4844@v0.4.0/bindings/go/../../src/c_kzg_4844.c
 ```
 
-- **ROOTCAUSE:** Unknown
-- **HOW TO FIX:** Bug report Go.
+- **ROOTCAUSE:** `trimpath` broken on some architectures (e.g. `ubintu:bionic`) See [issue](https://github.com/golang/go/issues/67011)
+- **HOW TO FIX:** Follow up bug report
