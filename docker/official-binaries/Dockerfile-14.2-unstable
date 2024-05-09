@@ -1,0 +1,25 @@
+FROM ubuntu:noble
+
+RUN apt-get update && apt-get install gcc-multilib git ca-certificates wget file -yq --no-install-recommends
+RUN wget https://go.dev/dl/go1.22.0.linux-amd64.tar.gz && \
+    rm -rf /usr/local/go && \
+    tar -C /usr/local -xzf go1.22.0.linux-amd64.tar.gz
+ENV PATH=$PATH:/usr/local/go/bin
+
+
+# reference build
+RUN wget https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.14.2-unstable-eeb22089.tar.gz && tar -xvf geth-linux-amd64-1.14.2-unstable-eeb22089.tar.gz && \
+    cd geth-linux-amd64-1.14.2-unstable-eeb22089 && strip --remove-section .note.go.buildid --remove-section .note.gnu.build-id geth && \
+    mv geth /bin/geth-reference
+
+# checkout and build in same env as ref build (except travis)
+RUN git clone --branch master https://github.com/ethereum/go-ethereum.git && cd go-ethereum && git fetch && \
+    git checkout -b reproduce eeb22089fd24ee1377a6a1f52deb41673c38419c && \
+    CGO_ENABLED=1 /usr/local/go/bin/go run ./build/ci.go install -dlgo ./cmd/geth/
+
+RUN cd go-ethereum/build/bin && strip --remove-section .note.go.buildid --remove-section .note.gnu.build-id geth && \
+    mv geth /bin/geth-reproduce
+
+RUN /usr/local/go/bin/go version >> /go-environment.txt && \
+    echo -e "\n" >> /go-environment.txt && \
+    usr/local/go/bin/go env >> /go-environment.txt
