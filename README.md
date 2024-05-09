@@ -6,18 +6,18 @@ Reproducing Official Linux amd64 binary bundles from [geth.ethereum.org/download
 
 Build dockerfile and diffoscope if different binaries are produced.
 
-`./scripts/docker-and-diff.sh <docker relative filepath> <docker tag>``
+`./scripts/docker-and-diff.sh <docker relative filepath> <docker tag>`
 
-e.g. `./scripts/docker-and-diff.sh travis/CGO0.Dockerfile travis-cgo0`
+**For example,**
+`./scripts/docker-and-diff.sh travis/CGO0.Dockerfile travis-cgo0`
 
 **Note:** May need to redo `chmod +x ./scripts/docker-and-diff.sh` if docker issues.
 
 ## STATE
 
-> ❌ Unreproducible
+> 🚧 Rootcauses for unreproducibility found
 
-Rootcauses found:
-
+Rootcauses:
 - [x] Embedding of date
   - When compiling in detached state a date is NOT embedded, as in official releases. Check out in a new branch, or perhaps set the date in other way.
 - [x] Full path embeddings of C libraries

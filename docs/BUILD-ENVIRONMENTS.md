@@ -1,6 +1,6 @@
 # Build Systems - Go Ethereum
 
-> The purpose of this document is to map out the build environments used in geth releases and reproducing attempts, in order to **1.** find causes of unreproducibility, **2.** find any integrity issues in build pipeline.
+> The purpose of this document is to map out the build environments used in geth releases and reproducing attempts, in order to find causes of unreproducibility.
 
 Build environments discussed:
 

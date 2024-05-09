@@ -1,4 +1,4 @@
-# cmd wiki!
+# cmd cheatsheet
 
 ## objdump
 
