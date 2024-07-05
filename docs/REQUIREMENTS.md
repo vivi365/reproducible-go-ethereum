@@ -28,10 +28,7 @@ Go Ethereum have several packaging forms that can benefit from verification of b
     - A method for end-users to recreate and validate a build provided by Go Ethereum
 5. Verifiable verification?...
 
-## Attack Mitigation
-
-TODO
 
 # Implementation
 
-An independent verifier -- integrate with go ethereum as a "canary" + let's users verify their binary (provide script).
+An independent verifier that let's users verify their binary
